@@ -30,7 +30,7 @@ const greetings = [
   "We're glad you're here with us!"
 ];
 
-// Use Math.random() to randomly select an index from the greetings array
+
 const randomIndex = Math.floor(Math.random() * greetings.length);
 app.get("/", (req, res) => {
   res.sendFile("index.html", {root: "./views"})
@@ -75,7 +75,7 @@ io.on('connection', socket => {
   n: 1,
 })
       .then((response) => {
-        // Send the response back to the client
+
         console.log(message)
         const completion_text = response.data.choices[0].message.content;
       console.log(completion_text);
@@ -97,7 +97,7 @@ io.on('connection', socket => {
   n: 1,
 })
       .then((response) => {
-        // Send the response back to the client
+        
         const text = response.data.choices[0].message.content;
       console.log(text);
 
@@ -109,7 +109,7 @@ io.on('connection', socket => {
       headers: {
         accept: 'audio/mpeg',
         'content-type': 'application/json',
-        'xi-api-key': `hehuejejejdj`,
+        'xi-api-key': `${process.env.api}`,
       },
       data: {
         text: text,
@@ -160,11 +160,11 @@ socket.emit('audio file', fileName);
   });
 });
 
-/*app.get('*', function (req, res) {
-  res.status(404).redirect('https://indiangpt.jatinsharma24.repl.co/')
-})*/
+app.get('*', function (req, res) {
+  res.status(404).redirect('/')
+})
 
-const port = process.env.PORT || 0000;
+const port = process.env.PORT || 8080;
 server.listen(port, () => {
   console.log(`server listening on port ${port}`);
 });

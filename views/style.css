@@ -1,0 +1,424 @@
+@font-face {
+  font-family: 'Impact';
+  src: url('impact.ttf');
+}
+*{
+  padding: 0;
+  margin: 0;
+}
+/*.medekha {
+  background-image: url(https://cdn.discordapp.com/attachments/1050293876847542312/1054264522099146802/images_6.jpeg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}*/
+.chat-container {
+  background-color: #19203B;
+/*url(https://cdn.discordapp.com/attachments/1050293876847542312/1054264522099146802/images_6.jpeg);*/
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: 5px;
+  margin: 0, auto;
+  border-bottom: 2px solid white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-header img{
+  color: white;
+  margin: 5px auto;
+  position: relative;
+  height: auto;
+  width: 50%;
+}
+.chat-header a {
+  margin-right: 10px;
+  color: white;
+}
+/*.card {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  margin: 10px auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px
+}*/
+.card {
+  display: none;
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px); 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#card-heading {
+  margin: 0;
+  font-size: 2em;
+  text-align: center;
+  color: #222;
+}
+.card > p {
+  margin: 10px 0;
+  font-size: 10px;
+}
+
+#pricing-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background-color: #f80;
+  color: white;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  flex-grow: 1;
+}
+
+#pricing-button:hover {
+  background-color: #fc0;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  transform: scale(1.1);
+}
+
+#pricing-button i {
+  margin-left: 10px;
+  font-size: 1.0em;
+}
+
+.chat-header i {
+  font-size: 20px;
+}
+.chat-messages {
+  position: relative;
+  flex: 1;
+  color: white;
+  overflow-y: scroll;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.chat-messages ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#scroll-to-bottom {
+  display: none;
+  position: fixed;
+  bottom: 15%;
+  right: 20px;
+  z-index: 99;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+#scroll-to-bottom.show {
+  display: flex;
+}
+
+.chat-messages p {
+  margin-bottom: 5px;
+  justify-content: center;
+  text-align: center;
+  align-content: center;
+  align-items: center
+  padding: 0;
+}
+
+.chat-messages li {
+  margin-bottom: 20px;
+  color: black;
+  border-radius: 11px;
+  border-width: 5px;
+  border-style: solid;
+  word-wrap: break-word;
+  padding: 10px;
+  display: inline-block;
+}
+
+.chat-messages li:nth-child(odd) {
+  float: left;
+  clear: both;
+  background-color: white;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 1px;
+  border-color: white;
+  word-wrap: break-word;
+}
+
+.chat-messages li:nth-child(even) {
+  float: right;
+  clear: both;
+  background-color: #2c3e50;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 1px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-color: #2c3e50;
+  color: white;
+  word-wrap: break-word;
+}
+
+
+.chat-form {
+  border-top: 2px solid white;
+  padding: 20px;
+  display: flex;
+}
+
+.chat-form form {
+  width: 100%;
+  display: flex;
+}
+
+#message-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  border-radius: 15px;
+}
+
+.chat-form button[type="submit"], #voice {
+  padding: 10px;
+  margin: 1px 3px;
+  border: none;
+  font-size: 16px;
+  border-radius: 50%;
+  background-color: mediumpurple;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .chat-container {
+    flex-direction: column;
+  }
+  .chat-form {
+    flex-direction: column;
+  }
+  #message-input {
+    width: 100%;
+  }
+}
+      /* Small screens (phones) */
+@media screen and (max-width: 500px) {
+  .chat-container {
+    flex-direction: column;
+  }
+
+  .chat-header {
+    flex: none;
+  }
+
+  .chat-messages {
+    flex: 1;
+  }
+
+  .chat-form {
+    flex: none;
+  }
+}
+
+/* Large screens (laptops and desktops) */
+@media screen and (min-width: 1000px) {
+  .chat-container {
+    flex-direction: column;
+  }
+  
+  .chat-messages li {
+    width: 60%;
+  }
+
+  .chat-header {
+    flex: none;
+    width: 100%;
+  }
+
+  .chat-messages {
+    flex: 1;
+    width: 100%;
+  }
+
+  .chat-form {
+    flex: none;
+  }
+}
+.secret > img {
+  width: 30%;
+  height: auto;
+}
+
+/* Tablets (portrait) */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .chat-container {
+    flex-direction: column;
+  }
+
+  .chat-header {
+    flex: none;
+  }
+
+  .chat-messages {
+    flex: 1;
+  }
+
+  .chat-form {
+    flex: none;
+  }
+}
+.secret {
+  width: 100%;
+  height: 100%;
+  background-color: #19203B;
+  display: flex;
+  flex-direction: column;
+}
+.secret a {
+  margin-right: 10px;
+  color: white;
+}
+.secret i {
+  font-size: 20px;
+}
+.secret img{
+  color: white;
+  margin: 5px auto;
+  position: relative;
+  height: auto;
+  width: 50%;
+}
+.secret h1 {
+  padding: 5px;
+  margin: 0, auto;
+  color: white;
+  font-size: 22px;
+  text-align: center;
+}
+.secret h5 {
+  padding: 5px;
+  margin: 0, auto;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+.secret #para, .secret #para > a {
+  padding: 5px;
+  margin: 0, auto;
+  color: white;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+}
+.secret #intro {
+  margin-top: 18px;
+  padding: 5px;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.secret ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.secret li {
+  margin: 15px;
+  font-size: 14px;
+  border-radius: 11px;
+  border: none;
+}
+      #login-form {
+  border: 3px solid #cccbf7;
+  box-shadow: 10px 10px 15px #dbeaff;
+  border-radius: 5px;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  padding: 15px;
+  position: absolute;
+  margin: 0 auto;
+  text-align: center;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#login-form label {
+  margin-top: 11px;
+  color: white;
+}
+#login-form input, #login-form select {
+  width: 80%;
+  padding: 12px;
+  border: 2px solid #cccbf7;
+  border-radius: 4px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+
+
+#login-form button {
+  background-color: #f7d7e5;
+  width: 80%;
+  padding: 12px;
+  border: 2px solid #cccbf7;
+  border-radius: 4px;
+  margin: 2px 2px;
+  box-sizing: border-box;
+  font-size: 15px;
+  color: black;
+  cursor: pointer;
+}
+
+#login-form:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -5;
+}
+
+
+

@@ -137,20 +137,20 @@ socket.emit('select character', selectedCharacter);
 socket.emit('set username', username);
 
 if (Notification.permission === "granted") {
-  navigator.serviceWorker.register("/sw.js").then(registration => {
-    registration.showNotification(`Hello ${username}!`, {
+  
+  navigator.serviceWorker.register('/views/sw.js')
+  .then(registration => {
+        registration.showNotification(`Hello ${username}!`, {
           body: `You're now connected with ${selectedCharacter}`,
           icon: `https://media.discordapp.net/attachments/890149366499786762/1102641686825418793/Picsart_23-05-01_22-31-43-138.png`,
           vibrate: [200, 100, 200, 100, 200, 100, 200],
           tag: 'vibration-sample'
         });
-  });
+  })
 } else if (Notification.permission === "default") {
   
   Notification.requestPermission().then(permission => {
     if (permission === "granted") {
-
-      if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/views/sw.js')
   .then(registration => {
         registration.showNotification(`Hello ${username}!`, {
@@ -165,7 +165,6 @@ if (Notification.permission === "granted") {
   .catch(function(error) {
     console.log('Service worker registration failed:', error);
   });
-}
       
     } else {
       console.log("Notification permission denied.");

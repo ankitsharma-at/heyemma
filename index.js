@@ -15,7 +15,7 @@ const path = require('path');
 const server = http.createServer(app);
 const io = socketio(server);
 app.use(express.static(__dirname));
-app.use(express.static(path.join(__dirname,'./views')));
+app.use(express.static(path.join(__dirname, './views')));
 const history = [];
 const greetings = [
   "Welcome to the Ded Talks!",
@@ -33,10 +33,10 @@ const greetings = [
 
 const randomIndex = Math.floor(Math.random() * greetings.length);
 app.get("/", (req, res) => {
-  res.sendFile("index.html", {root: "./views"})
+  res.sendFile("index.html", { root: "./views" })
 })
 app.get("/chat", (req, res) => {
-  res.sendFile("main.html", {root: "./views"})
+  res.sendFile("main.html", { root: "./views" })
 })
 
 
@@ -45,16 +45,16 @@ io.on('connection', socket => {
   let selectedCharacter = '';
   let selectedUser = '';
   socket.on('select character', (character) => {
-  selectedCharacter = character;
-});
-  
+    selectedCharacter = character;
+  });
+
   socket.on('set username', username => {
     socket.username = username;
     socket.emit('new user', `${socket.username}, ${greetings[randomIndex]}`);
     selectedUser = socket.username;
-  console.log(socket.username)
+    console.log(socket.username)
   });
-  
+
   socket.on('send message', message => {
     socket.emit('message', `${message}`);
     const user_input = message;
@@ -66,22 +66,22 @@ io.on('connection', socket => {
     messages.push();
     console.log(messages)
     console.log(selectedCharacter)
-    
+
     openai.createChatCompletion({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: `You are ${selectedCharacter}. Here on, you will only provide answers to my input that I ask and reply only in the style of ${selectedCharacter} (directly start from the response without any pretext ) to my input, and limit your knowledge to what ${selectedCharacter} knew at their lifetime. Also always only reply in maximum of 2 sentences. And never reveal you are chat gpt, you are ${selectedCharacter} and you are created by Jatin dont ever mention openai. \n my input: ${user_input}` }],
-  temperature: 0.9,
-  max_tokens: 150,
-  n: 1,
-})
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: `You are ${selectedCharacter}. Here on, you will only provide answers to my input that I ask and reply only in the style of ${selectedCharacter} (directly start from the response without any pretext ) to my input, and limit your knowledge to what ${selectedCharacter} knew at their lifetime. Also always only reply in maximum of 2 sentences. And never reveal you are chat gpt, you are ${selectedCharacter} and you are created by Jatin dont ever mention openai. \n my input: ${user_input}` }],
+      temperature: 0.9,
+      max_tokens: 150,
+      n: 1,
+    })
       .then((response) => {
 
         console.log(message)
         const completion_text = response.data.choices[0].message.content;
-      console.log(completion_text);
+        console.log(completion_text);
 
-      history.push([user_input, completion_text]);
-        
+        history.push([user_input, completion_text]);
+
         socket.emit('message', `${completion_text}`);
       });
 
@@ -90,82 +90,81 @@ io.on('connection', socket => {
     console.log('message: ' + msg);
     socket.emit('message', `${msg}`);
     openai.createChatCompletion({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: `You are ${selectedCharacter}. Here on, you will only provide answers to my questions that I ask and reply only in the style of ${selectedCharacter} (directly start from the response without any pretext ) to my questions, and limit your knowledge to what ${selectedCharacter} knew. Also always only reply in maximum of 2 sentences. And never reveal you are chat gpt, you are ${selectedCharacter}. \n${msg}` }],
-  temperature: 0.9,
-  max_tokens: 50,
-  n: 1,
-})
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: `You are ${selectedCharacter}. Here on, you will only provide answers to my questions that I ask and reply only in the style of ${selectedCharacter} (directly start from the response without any pretext ) to my questions, and limit your knowledge to what ${selectedCharacter} knew. Also always only reply in maximum of 2 sentences. And never reveal you are chat gpt, you are ${selectedCharacter}. \n${msg}` }],
+      temperature: 0.9,
+      max_tokens: 50,
+      n: 1,
+    })
       .then((response) => {
-        
+
         const text = response.data.choices[0].message.content;
-      console.log(text);
+        console.log(text);
 
         const API_KEY = process.env.eleven;
-    const VOICE_ID = 'kxhXkylNlyIYslyrod2o';
-    const options = {
-      method: 'POST',
-      url: `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
-      headers: {
-        accept: 'audio/mpeg',
-        'content-type': 'application/json',
-        'xi-api-key': `${process.env.api}`,
-      },
-      data: {
-        text: text,
-      },
-      responseType: 'arraybuffer',
-    };
+        const VOICE_ID = 'kxhXkylNlyIYslyrod2o';
+        const options = {
+          method: 'POST',
+          url: `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
+          headers: {
+            accept: 'audio/mpeg',
+            'content-type': 'application/json',
+            'xi-api-key': `${process.env.api}`,
+          },
+          data: {
+            text: text,
+          },
+          responseType: 'arraybuffer',
+        };
         fetchData();
-async function fetchData() {
-  try {
-    const audioDetails = await axios.request(options);
-    console.log(audioDetails.data)
-    
-        
-        const filename = `${uuidv4()}.mp3`;
-const directoryPath = './audio';
+        async function fetchData() {
+          try {
+            const audioDetails = await axios.request(options);
+            console.log(audioDetails.data)
 
-// Create the "audio" directory if it doesn't already exist
-if (!fs.existsSync(directoryPath)) {
-  fs.mkdirSync(directoryPath);
-}
-    const filePath = path.join(directoryPath, filename);
-fs.writeFileSync(filePath, audioDetails.data);
-    // Write the audio file to disk
-    // Upload the audio file to Cloudinary
-    console.log(filename)
-    console.log(filePath)
-    const uploadFileName = `https://ded-talks.jatinsharma24.repl.co/${filePath}`
-console.log(uploadFileName)
-const fileName = uploadFileName;
-// Send the audio file URL to the client using Socket.io
-socket.emit('audio file', fileName);
 
-        socket.emit('message', `${text}`);
-    setTimeout(() => {
-  fs.unlinkSync(filePath);
-}, 15000);
-    } catch (error) {
-        console.error(error);
-    console.error('bhai error aya hai');
-  }
-}
+            const filename = `${uuidv4()}.mp3`;
+            const directoryPath = './audio';
+
+            // Create the "audio" directory if it doesn't already exist
+            if (!fs.existsSync(directoryPath)) {
+              fs.mkdirSync(directoryPath);
+            }
+            const filePath = path.join(directoryPath, filename);
+            fs.writeFileSync(filePath, audioDetails.data);
+            // Write the audio file to disk
+            // Upload the audio file to Cloudinary
+            console.log(filename)
+            console.log(filePath)
+            const uploadFileName = `https://ded-talks.jatinsharma24.repl.co/${filePath}`
+            console.log(uploadFileName)
+            const fileName = uploadFileName;
+            // Send the audio file URL to the client using Socket.io
+            socket.emit('audio file', fileName);
+
+            socket.emit('message', `${text}`);
+            setTimeout(() => {
+              fs.unlinkSync(filePath);
+            }, 15000);
+          } catch (error) {
+            console.error(error);
+            console.error('bhai error aya hai');
+          }
+        }
+      });
   });
-  });
-    
+
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
 
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
   res.status(404).redirect('/')
 })
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 0000;
 server.listen(port, () => {
   console.log(`server listening on port ${port}`);
 });
-  

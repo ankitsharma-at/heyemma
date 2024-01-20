@@ -4,206 +4,211 @@ const form = document.getElementById('message-form');
 const input = document.getElementById('message-input');
 const messages = document.getElementById('messages');
 const loginForm = document.getElementById("login-form");
-const submitButton = document.getElementById("submit-button");
-const voice = document.getElementById('voice');
+
+const voice = document.getElementById('mic');
 const micBtn = voice;
 let finalTranscript = '';
 let isRecordingStopped = false;
+let isRecording = false;
+let sendMessagetoo = false;
+let isSpeeking = false;
+let voiceBtnhasSlash = false;
+const voiceBtn = document.querySelector('#voice');
+let isAwake = false;
+let RecognitionEnd = false;
+let isDetected = false;
 let recognition = new window.webkitSpeechRecognition(); 
 recognition.continuous = true; 
 recognition.interimResults = false;
+let isContinuousListeningEnabled = false;
+if(isSpeeking) {
+    stopRecording();
+}
+recognition.onend = function() {
+  RecognitionEnd = true;
+  if(isContinuousListeningEnabled) {
+    voiceBtnhasSlash = true;
+  voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>'
+   isRecording = false;
+   isRecordingStopped = true;
+  }
+};
+const SLEEP_WORDS = ["sleep", "stop"]
 recognition.onresult = function(event) {
   let current = event.resultIndex;
   let transcript = event.results[current][0].transcript;
   finalTranscript = transcript;
-  
-  if (isRecordingStopped && finalTranscript !== '') {
+  if(!isAwake) {
+    if (isRecordingStopped && finalTranscript !== '') {
+    sendMessagetoo = true;
+    socket.emit('chat message', finalTranscript, sendMessagetoo);
     
-    socket.emit('chat message', finalTranscript);
     isRecordingStopped = false; 
+    }
   }
+
+  if(isAwake) {
+    if(SLEEP_WORDS.some(sleepWord => finalTranscript.includes(sleepWord))) {
+      isAwake = false;
+    
+      micBtn.classList.remove('active');
+  micBtn.style.animation = "none";
+      return;
+    } else {
+      //recognition.stop();
+      micBtn.classList.remove('active');
+  micBtn.style.animation = "none";
+      socket.emit('chat message', finalTranscript, sendMessagetoo);
+    }
+    }
 };
 
-micBtn.addEventListener('mousedown', function() {
-  if (document.getElementById('character').value === "Steve Jobs") {
-    startRecording();
+if(!isRecordingStopped) {
+micBtn.addEventListener('mousedown', touchedStart);
+micBtn.addEventListener('touchstart', touchedStart);
+}
+micBtn.addEventListener('mouseup', stopRecording);
+micBtn.addEventListener('touchend', stopRecording);
+
+function touchedStart() {
+  if(!isRecording) {
+  isRecording = true;
+ 
+  startRecording();
   } else {
-
-    document.querySelector('.card').style.display = 'flex';
+    
+ micBtn.classList.remove('active');
+  micBtn.style.animation = "none";
+    recognition.stop();
   }
-});
-
-micBtn.addEventListener('touchstart', function() {
-  if (document.getElementById('character').value === "Steve Jobs") {
-    startRecording();
-  } else {
-
-    document.querySelector('.card').style.display = 'flex';
-  }
-});
-
-micBtn.addEventListener('mouseup', function() {
-  if (document.getElementById('character').value === "Steve Jobs") {
-    stopRecording();
-  }
-});
-
-micBtn.addEventListener('touchend', function() {
-  if (document.getElementById('character').value === "Steve Jobs") {
-    stopRecording();
-  }
-});
-
-
+}
 
 function startRecording() {
-  finalTranscript = '';
+  micBtn.classList.add('active');
+  micBtn.style.animation = "pulse 2s infinite";
+  isRecording = true;
   recognition.start();
-  
 }
 
 function stopRecording() {
   recognition.stop();
-  
-
   isRecordingStopped = true;
+  isRecording = false;
+ micBtn.classList.remove('active');
+  micBtn.style.animation = "none";
+}
+if(isContinuousListeningEnabled && !isRecording) {
+recognition.onerror = function(event) {
+  recognition.stop();
+  micBtn.classList.remove('active');
+  micBtn.style.animation = "none";
+  startRecording();
+}
+}
+socket.on('voice msg', text => {
+  isSpeeking = true;
+var msg = new SpeechSynthesisUtterance();
+var voices = window.speechSynthesis.getVoices();
 
-  if (finalTranscript !== '') {
-    
-    socket.emit('chat message', finalTranscript);
+msg.voice = voices[23]; // select the first available voice
+msg.text = text;
+speechSynthesis.speak(msg);
+  const chatMessages = document.querySelector('.chat-messages');
+const allLiElements = chatMessages.getElementsByTagName("li");
+
+msg.onstart = function(event) {
+  const spokenText = text;
+  for (let i = 0; i < allLiElements.length; i++) {
+    if (allLiElements[i].textContent.includes(spokenText)) {
+      allLiElements[i].classList.add('spoken-text');
+allLiElements[i].style.borderColor = "lightgreen";
+    }
   }
-}
-socket.on('audio file', fileName => {
-  console.log(fileName)
-  playAudio(fileName);
-});
+};
 
-function playAudio(audioURL) {
-  const audio = new Audio(audioURL);
-  audio.play();
-}
-
-input.addEventListener('focus', () => {
-  voice.style.display = 'none';
-});
-input.addEventListener('blur', () => {
-  voice.style.display = 'flex';
-});
-const chatMessages = document.querySelector('.chat-messages');
-const scrollToBottomButton = document.getElementById('scroll-to-bottom');
-function scrollToBottom() {
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function toggleScrollToBottomButton() {
-  if (chatMessages.scrollHeight - chatMessages.scrollTop === chatMessages.clientHeight) {
-    scrollToBottomButton.classList.remove('show');
-  } else {
-    scrollToBottomButton.classList.add('show');
+  msg.onend = function(event) {
+    isSpeeking = false;
+    const spokenText = event.target.text;
+  for (let i = 0; i < allLiElements.length; i++) {
+    if (allLiElements[i].textContent.includes(spokenText)) {
+      allLiElements[i].classList.remove('spoken-text');
+      allLiElements[i].style.borderColor = "white";
+    }
   }
+  
+    if (isAwake) {
+      RecognitionEnd = false;
+      voiceBtnhasSlash = false;
+  voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+    startRecording();
+    }
 }
-
-
-scrollToBottomButton.addEventListener('click', scrollToBottom);
-
-chatMessages.addEventListener('scroll', toggleScrollToBottomButton);
-
-toggleScrollToBottomButton();
-
-const cardContainer = document.querySelector('.card');
-const cardClose = document.querySelector('#card-close');
-cardClose.addEventListener("click", event => {
-  event.preventDefault();
-  cardContainer.style.display = "none";
 
 })
 
-submitButton.addEventListener("click", event => {
+const keyboardBtn = document.querySelector('#keyboard');
+const backBtn = document.querySelector('a');
+const voiceCutBtn = document.querySelector('#voiceCut');
 
-  event.preventDefault();
+voiceBtn.addEventListener("click", event => {
+  if(RecognitionEnd && !isRecording) {
+    startRecording();
+  }
+  if(!voiceBtnhasSlash) {
+  isAwake = false;
+    voiceBtnhasSlash = true;
+  voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>'
+  } else {
+    isAwake = true;
+    voiceBtnhasSlash = false;
+  voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+  }
+})
 
- if (!document.getElementById("username").value) {
-   alert('Bruhh Please Enter All The required fields')
- } else if(document.getElementById('character').value === "none") {
-   alert('Bruhh Please Enter All The required fields')
- } else {
-const chatContainer = document.querySelector('.chat-container');
-  const characterDropdown = document.getElementById('character');
-const selectedCharacter = characterDropdown.value;
-
-socket.emit('select character', selectedCharacter);
+function handleClick() {
+  isContinuousListeningEnabled = false;
+  isAwake = false;
+  stopRecording();
+  const chatContainer = document.querySelector('.chat-container');
 
   chatContainer.style.display = "flex";
-     const username = document.getElementById("username").value;
-socket.emit('set username', username);
-
-if (Notification.permission === "granted") {
-  
-  navigator.serviceWorker.register('/views/sw.js')
-  .then(registration => {
-        registration.showNotification(`Hello ${username}!`, {
-          body: `You're now connected with ${selectedCharacter}`,
-          icon: `https://media.discordapp.net/attachments/890149366499786762/1102641686825418793/Picsart_23-05-01_22-31-43-138.png`,
-          vibrate: [200, 100, 200, 100, 200, 100, 200],
-          tag: 'vibration-sample'
-        });
-  })
-} else if (Notification.permission === "default") {
-  
-  Notification.requestPermission().then(permission => {
-    if (permission === "granted") {
-  navigator.serviceWorker.register('/views/sw.js')
-  .then(registration => {
-        registration.showNotification(`Hello ${username}!`, {
-          body: `You're now connected with ${selectedCharacter}`,
-          icon: `https://media.discordapp.net/attachments/890149366499786762/1102641686825418793/Picsart_23-05-01_22-31-43-138.png`,
-          vibrate: [200, 100, 200, 100, 200, 100, 200],
-          tag: 'vibration-sample'
-        });
-        
-       
-  })
-  .catch(function(error) {
-    console.log('Service worker registration failed:', error);
-  });
-      
-    } else {
-      console.log("Notification permission denied.");
-    }
-  });
+  document.querySelector('.voice-container').style.display = "none";
+   
 }
 
+keyboardBtn.addEventListener('click', handleClick);
+backBtn.addEventListener('click', handleClick);
+voiceCutBtn.addEventListener('click', handleClick);
 
-  document.querySelector('.secret').style.display = "none";
-   document.querySelectorAll('.secret *').forEach(element => {
-    element.style.display = 'none';
-  });
-  
- }
-    });
+const phoneButton = document.getElementById('voiceCall')
+phoneButton.addEventListener("click", event => {
+  event.preventDefault();
 
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  socket.emit('send message', input.value);
-  input.value = '';
-  const chatMessages = document.querySelector('.chat-messages');
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+const voiceContainer = document.querySelector('.voice-container');
+
+  voiceContainer.style.display = "flex";
+
+  isContinuousListeningEnabled = true;
+  isAwake = true;
+  if (isContinuousListeningEnabled) {
+
+    startRecording();
+  }
+   
+  document.querySelector('.chat-container').style.display = "none";
+   
 });
 
-socket.on('message', message => {
+const videoButton = document.getElementById('videoCall')
+videoButton.addEventListener("click", event => {
+  event.preventDefault();
 
-  const li = document.createElement('li');
-  const newUserMessage = document.getElementById("new-user-message");
-  if (newUserMessage && newUserMessage.style.display !== 'none') {
-    newUserMessage.style.display = "none";
-    }
-  li.textContent = message;
-  messages.appendChild(li);
-  const chatMessages = document.querySelector('.chat-messages');
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+const videoContainer = document.querySelector('.video-container');
+
+  videoContainer.style.display = "flex";
+
+   
+  document.querySelector('.chat-container').style.display = "none";
+   
 });
-socket.on('new user', message => {
-  const li = document.createElement('p');
-  li.innerHTML = message;
-  li.id = "new-user-message";
-  messages.appendChild(li);
-});
+               

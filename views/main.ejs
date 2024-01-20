@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML Meta Tags -->
+  <title>Hey Emma - The AI-Based Chat App</title></title>
+  <meta name="description" content="Hey Emma - revolutionize your chat experience with an AI-based chatbot that can chat, video call, and voice chat with you!">
+    <meta name="keywords" content="Hey Emma, AI chat app, chatbot, video call, voice chat, natural language processing, machine learning">
+	<meta name="author" content="Jatin">
+  <meta name="theme-color" content="#00000">
+  <!-- Google / Search Engine Tags -->
+  <meta itemprop="name" content="Hey Emma">
+  <meta itemprop="description" content="Hey Emma - revolutionize your chat experience with an AI-based chatbot that can chat, video call, and voice chat with you!">
+  <meta itemprop="image" content="https://media.discordapp.net/attachments/890149366499786762/1106778809933500536/Picsart_23-05-13_08-31-08-606.jpg">
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https://its.giving/ded">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hey Emma - The AI-Based Chat App">
+  <meta property="og:description" content="Hey Emma - revolutionize your chat experience with an AI-based chatbot that can chat, video call, and voice chat with you!">
+  <meta property="og:image" content="https://media.discordapp.net/attachments/890149366499786762/1106778809933500536/Picsart_23-05-13_08-31-08-606.jpg">
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hey Emma - The AI-Based Chat App">
+  <meta name="twitter:description" content="Hey Emma - revolutionize your chat experience with an AI-based chatbot that can chat, video call, and voice chat with you!">
+  <meta name="twitter:image" content="https://media.discordapp.net/attachments/890149366499786762/1106778809933500536/Picsart_23-05-13_08-31-08-606.jpg">
+        <!-- menifest.json file -->
+    <link rel="manifest" href="/manifest.json"/>
+    <!-- apple icon -->
+    <link rel="apple-touch-icon" href="https://media.discordapp.net/attachments/890149366499786762/1107714389240447097/Picsart_23-05-15_22-30-10-543.png" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="https://media.discordapp.net/attachments/890149366499786762/1107714389240447097/Picsart_23-05-15_22-30-10-543.png" type="image/x-icon">
+    <!--google analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2MV73L7N48"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2MV73L7N48');
+
+  /* Validating the screen size for the mobile phones*/
+  window.onload = function() {
+  if(window.innerWidth > 1000) {
+    
+document.querySelector('.chat-container').style.display = "none";
+    document.querySelector(".desktop-container").style.display = "flex";
+  } else {
+    document.querySelector('.chat-container').style.display = "flex";
+document.querySelector(".desktop-container").style.display = "none";    
+  }
+}
+</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-ABC123xyz..." crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="desktop-container" style="display:none;">
+      <div class="desktop-headers">
+        <a href="/chat">
+    <i class="fas fa-angle-left"></i>
+        </a>
+    <img src="https://media.discordapp.net/attachments/890149366499786762/1106778678718902322/Picsart_23-05-13_08-30-27-401-removebg-preview.png">
+      </div>
+   <div id="error-message">
+  <h2 style="color:white;">Oppsie! We are only available for Android and iOS.</h2>
+      </div>
+          </div>
+      <div class="chat-container">
+        <div class="menu-container">
+  <div class="menu-card">
+    <ul>
+      <li class="share-button"><a href="#"><i class="fa fa-share-alt"></i> Share Emma with others.</a></li>
+      <li class="toggle-themes"><a><i class="fa fa-gear"></i> Switch themes:</a>
+        
+  <form style="margin: 10px 30px;" id="theme-form">
+    <input style="margin-bottom: 15px;" type="radio" id="light-theme" name="theme" value="light">
+    <label for="light-theme">Light Theme</label>
+    <br>
+    <input type="radio" id="dark-theme" name="theme" value="dark">
+    <label for="dark-theme">Dark Theme</label>
+  </form>
+</li>
+
+    </ul>
+    <button class="close-button"><i class="fas fa-close"></i></button>
+  </div>
+        </div>
+  <div class="chat-header">
+    <a href="/chat">
+    <i class="fas fa-angle-left"></i>
+    </a>
+    <img src="https://media.discordapp.net/attachments/1008571051392909393/1105008258764242984/SUNSHINE_Create_a_hyper-realistic_4k_image_of_Emma_a_young_woma_07a1a23a-4886-48a8-9a8f-e03c338d8cff.png">
+   <h2 id="characterName">Emma</h2>
+    <i id="voiceCall" class="fas fa-phone-alt"></i>
+    <i id="videoCall" class="fa fa-video-camera"></i>
+    <i id="threeDots" class="fa fa-ellipsis-v"></i>
+  </div>
+        <div style="display: none;" class="card">
+  <i id="card-close" class="fa fa-close"></i>
+  <h1 id="card-heading">Unlock premium features!</h1>
+  <button id="pricing-button" onclick="location.href='https://ded-talks.jatinsharma24.repl.co/#pricing';">
+     See Pricing <i class="fas fa-arrow-right"></i>
+  </button>
+          <p>PS: You can voice chat with Steve Jobs for free!!</p>
+</div>
+
+        
+  <div class="chat-messages">
+    <ul id="messages"></ul>
+    <p id="username-name" style="display:none;"><%= name %></p>
+    <button id="scroll-to-bottom"><i class="fa fa-angle-down" style="font-size:1.5em; color:white;"></i></button>
+  </div>
+  <div class="chat-form">
+    <form id="message-form">
+      
+      <input id="message-input" type="text" placeholder="Enter your message..." autocomplete="off"/>
+      <button type="button" id="mic"><i class="fa fa-microphone"></i></button>
+      <button type="submit"><i class="fas fa-send"></i></button>
+      
+    </form>
+  </div>
+</div>
+    
+    <div style="display:none;" class="voice-container">
+  <div class="voice-messages">
+    <a>
+    <i class="fas fa-angle-left"></i>
+    </a>
+    <i id="threeDots" class="fa fa-ellipsis-v"></i>
+    <div class="profile-picture-emma"><img id="img1" src="https://media.discordapp.net/attachments/1008571051392909393/1105008258764242984/SUNSHINE_Create_a_hyper-realistic_4k_image_of_Emma_a_young_woma_07a1a23a-4886-48a8-9a8f-e03c338d8cff.png">
+    </div>
+    <hr>
+    <div class="profile-picture-user">
+    <img id="img2" src="<%= profilePicture %>">
+    </div>
+  </div>
+  <div class="voice-form">
+    <form id="voice-form">
+      
+     <!-- <input id="voice-input" type="text" placeholder="Enter your message..." autocomplete="off"/>-->
+      <button type="button" id="keyboard"><i class="fa fa-keyboard-o"></i></button>
+      <button type="button" id="voice"><i class="fa fa-microphone"></i></button>
+      <button type="button" id="voiceCut"><i class="fas fa-phone-slash"></i></button>
+    </form>
+  </div>
+    </div>
+    <div style="display:none;" class="video-container">
+      
+  <div class="video-messages">
+    <div class="glass-cover">
+              <div class="card">
+  
+  <h1 style="color:white;" id="card-heading">Unlock features!</h1>
+  <button id="pricing-button" onclick="location.href='https://teenjat2611.gumroad.com/l/emma';">
+     See Pricing <i class="fas fa-arrow-right"></i>
+  </button>
+          <p>~ Please do support so that we can provide this feature to everyone!!</p>
+</div>
+
+    </div>
+    <img id="img1" src="https://media.discordapp.net/attachments/1008571051392909393/1105008258764242984/SUNSHINE_Create_a_hyper-realistic_4k_image_of_Emma_a_young_woma_07a1a23a-4886-48a8-9a8f-e03c338d8cff.png">
+    
+    
+  </div>
+  <div class="video-form">
+    <form id="video-form">
+      
+     <!-- <input id="voice-input" type="text" placeholder="Enter your message..." autocomplete="off"/>-->
+      <button type="button" id="keys"><i class="fa fa-keyboard-o"></i></button>
+      <button type="button" id="voice"><i class="fa fa-microphone"></i></button>
+      <button type="button" id="videoCut"><i class="fas fa-phone-slash"></i></button>
+    </form>
+  </div>
+    </div>
+     <script src="/socket.io/socket.io.js"></script>
+<script src="themes.js"></script>
+<script src="script.js"></script>
+<script src="others.js"></script>
+<script src="message.js"></script>
+  </body>
+</html>
+<!-- https://media.discordapp.net/attachments/1008571051392909393/1105008258764242984/SUNSHINE_Create_a_hyper-realistic_4k_image_of_Emma_a_young_woma_07a1a23a-4886-48a8-9a8f-e03c338d8cff.png -->

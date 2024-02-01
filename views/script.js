@@ -107,12 +107,14 @@ recognition.onerror = function(event) {
 }
 socket.on('voice msg', text => {
   isSpeeking = true;
-var msg = new SpeechSynthesisUtterance();
-var voices = window.speechSynthesis.getVoices();
+  const apiUrl = new URL("https://tts-ai-11.onrender.com/tts");
+  apiUrl.searchParams.append("text", text);
 
-msg.voice = voices[23]; // select the first available voice
-msg.text = text;
-speechSynthesis.speak(msg);
+  fetch(apiUrl).then(response => response.json()).then(data => {
+    const audio = new Audio(data.audioFile);
+    audio.play();
+  }).catch(error => console.error("Error fetching audio:", error));
+
   const chatMessages = document.querySelector('.chat-messages');
 const allLiElements = chatMessages.getElementsByTagName("li");
 

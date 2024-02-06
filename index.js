@@ -192,6 +192,12 @@ app.get("/", (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile('login.html', { root: './views' });
 });
+app.get('/privacy', (req, res) => {
+  res.redirect('https://github.com/botsdevelopers/emma/blob/main/privacy.md');
+});
+app.get('/tos', (req, res) => {
+  res.redirect('https://github.com/botsdevelopers/emma/blob/main/tos.md');
+});
 
 app.get("/chat", isAuthenticated, (req, res) => {
   const { profilePicture } = req.user;

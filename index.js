@@ -193,10 +193,10 @@ app.get('/login', (req, res) => {
   res.sendFile('login.html', { root: './views' });
 });
 app.get('/privacy', (req, res) => {
-  res.redirect('https://github.com/botsdevelopers/emma/blob/main/privacy.md');
+  res.sendFile('privacy.html', { root: './views' });
 });
 app.get('/tos', (req, res) => {
-  res.redirect('https://github.com/botsdevelopers/emma/blob/main/tos.md');
+  res.sendFile('tos.html', { root: './views' });
 });
 
 app.get("/chat", isAuthenticated, (req, res) => {
